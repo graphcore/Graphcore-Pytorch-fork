@@ -8,13 +8,20 @@ symlink-public-resources() {
     public_source_dir=${1}
     target_dir=${2}
     # need to wait until the dataset has been mounted (async on Paperspace's end)
+    # otherwise the mount will not be successful
     MAX_MOUNT_TIME=60
     WAITING_FOR=0
-    # while [ ! -d ${public_source_dir} ] && [ "$((${WAITING_FOR}<${MAX_MOUNT_TIME}))" -eq 1 ]
-    # do
-    #     echo "Waiting for dataset "${public_source_dir}" to be mounted..."
-    #     sleep 1
-    # done
+    while [ ! -d ${public_source_dir} ] && [ "$((${WAITING_FOR}<${MAX_MOUNT_TIME}))" -eq 1 ]
+    do
+        echo "Waiting for dataset "${public_source_dir}" to be mounted..."
+        WAITING_FOR=$((${WAITING_FOR} + 1))
+        sleep 1
+    done
+    if [ ! -d ${public_source_dir} ]
+    then
+        echo "Error: Cannot symlink ${public_source_dir} it was not mounted in ${MAX_MOUNT_TIME}s"
+        return -1
+    fi
     # To use an overlay mount in a container we need to make sure that the
     # work and upper directories are not themselves in overlays.
     OVERLAY_DIRECTORY="/fusedoverlay"
@@ -25,7 +32,6 @@ symlink-public-resources() {
     fi
     echo "Symlinking - ${public_source_dir} to ${target_dir}"
 
-    mkdir -p ${public_source_dir}
     mkdir -p ${target_dir}
     workdir="${OVERLAY_DIRECTORY}/workdirs/${public_source_dir}"
     upperdir="${OVERLAY_DIRECTORY}/upperdir/${public_source_dir}"
