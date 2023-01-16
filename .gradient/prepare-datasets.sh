@@ -27,7 +27,7 @@ symlink-public-resources() {
     OVERLAY_DIRECTORY="/fusedoverlay"
     if [ ! -d ${OVERLAY_DIRECTORY} ]; then
         echo "Mounting new tmpfs to ${OVERLAY_DIRECTORY}"
-        mkdir -p /fusedoverlay
+        mkdir -p ${OVERLAY_DIRECTORY}
         mount -t tmpfs tmpfs ${OVERLAY_DIRECTORY}
     fi
     echo "Symlinking - ${public_source_dir} to ${target_dir}"
