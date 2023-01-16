@@ -38,7 +38,8 @@ symlink-public-resources() {
     mkdir -p ${workdir}
     mkdir -p ${upperdir}
     mount -t overlay overlay -o lowerdir=${public_source_dir},upperdir=${upperdir},workdir=${workdir} ${target_dir}
-
+    find ${target_dir} -type d -print0 | xargs -0 chmod 777
+    find ${target_dir} -type f -print0 | xargs -0 chmod 666
 }
 
 
