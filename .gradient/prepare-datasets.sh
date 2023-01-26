@@ -33,8 +33,8 @@ symlink-public-resources() {
     echo "Symlinking - ${public_source_dir} to ${target_dir}"
 
     mkdir -p ${target_dir}
-    workdir="${OVERLAY_DIRECTORY}/workdirs/${public_source_dir}"
-    upperdir="${OVERLAY_DIRECTORY}/upperdir/${public_source_dir}"
+    workdir="${OVERLAY_DIRECTORY}/workdirs${public_source_dir}"
+    upperdir="${OVERLAY_DIRECTORY}/upperdir${public_source_dir}"
     mkdir -p ${workdir}
     mkdir -p ${upperdir}
     mount -t overlay overlay -o lowerdir=${public_source_dir},upperdir=${upperdir},workdir=${workdir} ${target_dir}
