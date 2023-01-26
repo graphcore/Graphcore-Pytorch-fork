@@ -24,7 +24,7 @@ symlink-public-resources() {
     fi
     # To use an overlay mount in a container we need to make sure that the
     # work and upper directories are not themselves in overlays.
-    OVERLAY_DIRECTORY="/fusedoverlay"
+    OVERLAY_DIRECTORY="/tmp/fusedoverlay"
     if [ ! -d ${OVERLAY_DIRECTORY} ]; then
         echo "Mounting new tmpfs to ${OVERLAY_DIRECTORY}"
         mkdir -p ${OVERLAY_DIRECTORY}
