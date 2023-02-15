@@ -1,30 +1,47 @@
 #!/bin/bash
 
 symlink-public-resources() {
+    # This function will "symlink" one read only folder and make it appear
+    # as read write in the target directory. This is used to make gradient
+    # datasets appear in directories with read/write permissions.
+
     public_source_dir=${1}
     target_dir=${2}
-
     # need to wait until the dataset has been mounted (async on Paperspace's end)
-    #while [ ! -d "${PUBLIC_DATASET_DIR}/exe_cache" ]
-    while [ ! -d ${public_source_dir} ]
+    # otherwise the mount will not be successful
+    MAX_MOUNT_TIME=60
+    WAITING_FOR=0
+    while [ ! -d ${public_source_dir} ] && [ "$((${WAITING_FOR}<${MAX_MOUNT_TIME}))" -eq 1 ]
     do
         echo "Waiting for dataset "${public_source_dir}" to be mounted..."
+        WAITING_FOR=$((${WAITING_FOR} + 1))
         sleep 1
     done
-
+    if [ ! -d ${public_source_dir} ]
+    then
+        echo "Error: Cannot symlink ${public_source_dir} it was not mounted in ${MAX_MOUNT_TIME}s"
+        return -1
+    fi
+    # To use an overlay mount in a container we need to make sure that the
+    # work and upper directories are not themselves in overlays.
+    OVERLAY_DIRECTORY="/tmp/fusedoverlay"
+    if [ ! -d ${OVERLAY_DIRECTORY} ]; then
+        echo "Mounting new tmpfs to ${OVERLAY_DIRECTORY}"
+        mkdir -p ${OVERLAY_DIRECTORY}
+        mount -t tmpfs tmpfs ${OVERLAY_DIRECTORY}
+    fi
     echo "Symlinking - ${public_source_dir} to ${target_dir}"
 
-    # Make sure it exists otherwise you'll copy your current dir
     mkdir -p ${target_dir}
-    workdir="/fusedoverlay/workdirs/${public_source_dir}"
-    upperdir="/fusedoverlay/upperdir/${public_source_dir}"
+    workdir="${OVERLAY_DIRECTORY}/workdirs${public_source_dir}"
+    upperdir="${OVERLAY_DIRECTORY}/upperdir${public_source_dir}"
     mkdir -p ${workdir}
     mkdir -p ${upperdir}
-    fuse-overlayfs -o lowerdir=${public_source_dir},upperdir=${upperdir},workdir=${workdir} ${target_dir}
-
+    mount -t overlay overlay -o lowerdir=${public_source_dir},upperdir=${upperdir},workdir=${workdir} ${target_dir}
+    find ${target_dir} -type d -print0 | xargs -0 chmod 777
+    find ${target_dir} -type f -print0 | xargs -0 chmod 666
 }
-apt update -y
-apt install -y libfuse3-dev fuse-overlayfs
+
 
 echo "Starting preparation of datasets"
 # symlink exe_cache files
