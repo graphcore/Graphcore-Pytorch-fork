@@ -4,23 +4,6 @@ Graphcore-Pytorch-README_first:
  notebook:
    file: README_first.ipynb
 
-gptj-finetuning:
-  location: ../gptj-text-generation/
-  generated: true
-  notebook:
-    file: finetuning.ipynb
-    timeout: 15000
-  requirements_file: requirements.txt
-
-
-gptj-generative-inference:
-  location: ../gptj-text-generation/
-  generated: true
-  notebook:
-    file: GPTJ-generative-inference.ipynb
-    timeout: 3600
-  requirements_file: requirements.txt
-
 tutorial-basics-walkthrough:
   location: ../learning-PyTorch-on-IPU/basics
   generated: true
@@ -105,6 +88,23 @@ useful-managing-ipu-resources:
   notebook:
     file: managing_ipu_resources.ipynb
     timeout: 1000
+
+gptj-generative-inference:
+  location: ../gptj-text-generation/
+  generated: true
+  notebook:
+    file: GPTJ-generative-inference.ipynb
+    timeout: 3600
+  requirements_file: requirements.txt
+
+gptj-finetuning:
+  location: ../gptj-text-generation/
+  generated: true
+  notebook:
+    file: finetuning.ipynb
+    timeout: 15000
+  requirements_file: requirements.txt
+
 
 # examples_repository_options: &examples_repository_options
 #   repository:
