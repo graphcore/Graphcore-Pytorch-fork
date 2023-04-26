@@ -3,7 +3,7 @@
 # Script to be sourced on launch of the Gradient Notebook
 
 echo "Graphcore setup - Starting notebook setup"
-DETECTED_NUMBER_OF_IPUS=$(python .gradient/available_ipus.py)
+DETECTED_NUMBER_OF_IPUS="0"
 if [[ "$1" == "test" ]]; then
     IPU_ARG="${DETECTED_NUMBER_OF_IPUS}"
 else
