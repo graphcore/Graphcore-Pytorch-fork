@@ -39,6 +39,8 @@ export TIER_TYPE=$(python .gradient/check_tier.py)
 export FIREHOSE_STREAM_NAME="paperspacenotebook_production"
 export GCLOGGER_CONFIG="${PUBLIC_DATASETS_DIR}/gcl"
 export REPO_FRAMEWORK="PyTorch"
+export POPART_PRELOAD_POPEF="full-preload"
+
 
 # Fine-tuning BERT uses the HF Squad dataset
 export HUGGINGFACE_HUB_CACHE="/tmp/huggingface_caches"
