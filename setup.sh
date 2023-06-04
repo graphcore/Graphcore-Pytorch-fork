@@ -25,7 +25,7 @@ fi
 export NUM_AVAILABLE_IPU=${IPU_ARG}
 export GRAPHCORE_POD_TYPE="pod${IPU_ARG}"
 
-export POPLAR_EXECUTABLE_CACHE_DIR="/tmp/exe_cache"
+export POPLAR_EXECUTABLE_CACHE_DIR="/tmp/exe_cache/${SDK_VERSION}"
 export DATASETS_DIR="/tmp/dataset_cache"
 export CHECKPOINT_DIR="/tmp/checkpoints"
 export PERSISTENT_CHECKPOINT_DIR="/storage/ipu-checkpoints/"
